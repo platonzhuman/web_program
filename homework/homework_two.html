@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>homework_one</title>
+<style>
+  body { font-family: monospace; max-width: 700px; margin: 20px; }
+  .t { margin: 12px 0; padding-bottom: 8px; border-bottom: 1px solid #ccc; }
+  input { width: 70px; }
+  .r { color: green; }
+</style>
+</head>
+<body>
+<h2>домашняя работа 2</h2>
+<script>
+
+function upper(x){
+    let words = x.split('-');
+    for (let i = 1; i < words.length; i++){
+        words[i] = words[i].at(0).toUpperCase() + words[i].slice(1);
+    }
+    return words.join('');
+}
+console.log(upper('background-color'));
+
+function reves(){
+    arr =  [9,8,7,6,5,4,3,2,1];
+    let c1 = [...arr];
+    c1.reverse();
+
+    let c2 = arr.slice();
+    let r_arr = []
+    for (let i = c2.length - 1; i >= 0; i--) r_arr.push(c2[i]);
+    return c1, r_arr;
+}
+console.log(reves())
+
+let en = { привет: 'hello', мир: 'world', книга: 'book', спасибо: 'thanks' };
+let ja = { привет: 'こんにちは', мир: '世界', книга: '本', спасибо: 'ありがとう' };
+
+function slovar(text, per) {
+    let d = per === 'ja' ? ja : en;
+    let words = text.split(' ');
+    let out = [];
+    for (let i =0; i < words.length; i++){
+        out.push(d[words[i]] !== undefined ? d[words[i]] : words[i]); 
+  }
+  return out.join(' ');                 
+}
+
+console.log(slovar('привет мир', 'en'));
+console.log(slovar('привет мир', 'ja'));
+console.log(slovar('привет спасибо', 'en'));
+
+
+let days = {
+  1: 'monday',
+  2: 'tuesday',
+  3: 'wednesday',
+  4: 'thursday',
+  5: 'friday',
+  6: 'saturday',
+  7: 'sunday',
+  today: function(){
+    let d = new Date().getDay();
+    let n = (d + 6) % 7 + 1;
+    return days[n];
+  }
+};
+console.log('today = :', days.today());
+
+
+let pers = { director: 'Ivan', menedsher: 'Petr', inshener: 'Sergey' };
+let pers2 = {...pers};
+
+pers2.menedsher = 'Nikita';
+pers2.director = 'Platon';
+pers2.inshener = 'Oleg';
+
+console.log('BASE:\n' + JSON.stringify(pers, null, 2));   
+console.log('BASE 2:\n' + JSON.stringify(pers2, null, 2));
+
+let predmety = {
+  list: 'math, web_programm, AI',
+  add: function (g) {
+    let arr = this.list.split(', ');
+    if (arr.indexOf(g) === -1) {
+      arr.push(g);
+      this.list = arr.join(', ');
+    }
+  },
+  remove: function (g) {
+    let arr = this.list.split(', ');
+    let i = arr.indexOf(g);
+    if (i !== -1) {
+      arr.splice(i, 1);
+      this.list = arr.join(', ');
+    }
+  }
+};
+predmety.add('logic');
+console.log(predmety.list);
+predmety.add('fizik');
+console.log(predmety.list);
+predmety.remove('AI');
+console.log(predmety.list)
+
+</script>
+</body>
+</html>

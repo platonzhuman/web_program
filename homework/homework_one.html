@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>homework_one</title>
+<style>
+  body { font-family: monospace; max-width: 700px; margin: 20px; }
+  .t { margin: 12px 0; padding-bottom: 8px; border-bottom: 1px solid #ccc; }
+  input { width: 70px; }
+  .r { color: green; }
+</style>
+</head>
+<body>
+<h2>домашняя работа 1</h2>
+
+<div class="t">1.1 <input id="a11"> <input id="b11">
+  <button onclick="t11()">ок</button> <span class="r" id="o11"></span></div>
+
+<div class="t">1.2 <input id="a12">
+  <button onclick="t12()">ок</button> <span class="r" id="o12"></span></div>
+
+<div class="t">1.3 N=<input id="a13">
+  <button onclick="t13()">ок</button> <span class="r" id="o13"></span></div>
+
+<div class="t">1.4 N=<input id="a14">
+  <button onclick="t14()">ок</button> <span class="r" id="o14"></span></div>
+
+<div class="t">1.5 N=<input id="a15">
+  <button onclick="t15()">ок</button> <span class="r" id="o15"></span></div>
+
+<div class="t">1.6 N=<input id="a16">
+  <button onclick="t16()">ок</button> <span class="r" id="o16"></span></div>
+
+<div class="t">1.7 N=<input id="a17">
+  <button onclick="t17()">ок</button> <span class="r" id="o17"></span></div>
+
+<div class="t">1.8 N=<input id="a18n"> M=<input id="a18m">
+  <button onclick="t18()">ок</button> <span class="r" id="o18"></span></div>
+
+<div class="t">1.9 N=<input id="a19">
+  <button onclick="t19()">ок</button> <span class="r" id="o19"></span></div>
+
+<div class="t">1.10 N=<input id="a110">
+  <button onclick="t110()">ок</button> <span class="r" id="o110"></span></div>
+
+<div class="t">1.11 N=<input id="a111n"> M=<input id="a111m">
+  <button onclick="t111()">ок</button> <span class="r" id="o111"></span></div>
+
+<div class="t">1.12 <input id="a112a">/<input id="a112b">
+  <select id="a112op"><option>*</option><option>/</option></select>
+  <input id="a112c">/<input id="a112d">
+  <button onclick="t112()">ок</button> <span class="r" id="o112"></span></div>
+
+<div class="t">1.13 <input id="a113a">/<input id="a113b">
+  <select id="a113op"><option>+</option><option>-</option></select>
+  <input id="a113c">/<input id="a113d">
+  <button onclick="t113()">ок</button> <span class="r" id="o113"></span></div>
+
+<div class="t">1.14 N=<input id="a114n"> M=<input id="a114m">
+  <button onclick="t114()">ок</button> <span class="r" id="o114"></span></div>
+
+<div class="t">1.15 N=<input id="a115n"> M=<input id="a115m">
+  <button onclick="t115()">ок</button> <span class="r" id="o115"></span></div>
+
+<script>
+function val(id) { 
+    return +document.getElementById(id).value; 
+}
+function out(id, t) {
+    document.getElementById(id).textContent = t; 
+}
+
+function nod(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { let t = b; b = a % b; a = t; }
+  return a;
+}
+
+function prime(n) {
+  if (n < 2) return false;
+  for (let i = 2; i * i <= n; i++)
+    if (n % i == 0) return false;
+  return true;
+}
+
+function t11() {
+  out('o11', nod(val('a11'), val('b11')) == 1 ? 'взаимно просты' : 'не взаимно просты');
+}
+
+function t12() {
+  out('o12', prime(val('a12')) ? 'простое' : 'не простое');
+}
+
+function t13() {
+  let n = val('a13'), a = [];
+  for (let i = 0; i <= n; i++) a[i] = true;
+  a[0] = a[1] = false;
+  for (let i = 2; i * i <= n; i++)
+    if (a[i]) for (let j = i * i; j <= n; j += i) a[j] = false;
+  let r = [];
+  for (let i = 2; i <= n; i++) if (a[i]) r.push(i);
+  out('o13', r.join(' '));
+}
+
+function t14() {
+  let n = val('a14'), r = [], x = 2;
+  while (r.length < n) { if (prime(x)) r.push(x); x++; }
+  out('o14', r.join(' '));
+}
+
+function t15() {
+  let n = val('a15'), r = [];
+  for (let i = 1; i <= n; i++) if (n % i == 0) r.push(i);
+  out('o15', r.join(' '));
+}
+
+function t16() {
+  let n = val('a16'), r = [];
+  for (let p = 2; p * p <= n; p++) {
+    let k = 0;
+    while (n % p == 0) { n /= p; k++; }
+    if (k) r.push(p + '^' + k);
+  }
+  if (n > 1) r.push(n + '^1');
+  out('o16', r.join(' * '));
+}
+
+function t17() {
+  let n = val('a17'), r = [], x = 2;
+  while (r.length < n) {
+    let s = 0;
+    for (let i = 1; i < x; i++) if (x % i == 0) s += i;
+    if (s == x) r.push(x);
+    x++;
+  }
+  out('o17', r.join(' '));
+}
+
+function t18() {
+  let n = val('a18n'), m = val('a18m'), r = [];
+  for (let x = n; x <= m; x++) {
+    if (x % 2 == 0) continue;
+    let ok = false;
+    for (let a = 2; a < x && !ok; a++)
+      if (prime(a))
+        for (let b = 2; b < x - a && !ok; b++)
+          if (prime(b) && prime(x - a - b)) ok = true;
+    if (ok) r.push(x);
+  }
+  out('o18', r.join(' '));
+}
+
+function t19() {
+  let n = val('a19'), a = 0, b = 1;
+  while (b < n) { let t = a + b; a = b; b = t; }
+  out('o19', (b == n || n == 0) ? 'число Фибоначчи' : 'не число Фибоначчи');
+}
+
+function t110() {
+  let n = val('a110'), p = 1;
+  for (let i = n; i > 0; i -= 2) p *= i;
+  out('o110', p);
+}
+
+function t111() {
+  let n = val('a111n'), m = val('a111m'), r = [];
+  for (let a = n; a <= m; a++)
+    for (let b = a; b <= m; b++) {
+      let c = Math.sqrt(a * a + b * b);
+      if (c <= m && c == Math.floor(c)) r.push(a + ',' + b + ',' + c);
+    }
+  out('o111', r.join('; '));
+}
+
+function t112() {
+  let a = val('a112a'), b = val('a112b'), c = val('a112c'), d = val('a112d');
+  let op = document.getElementById('a112op').value, num, den;
+  if (op == '*') { num = a * c; den = b * d; }
+  else { num = a * d; den = b * c; }
+  let g = nod(num, den);
+  out('o112', (num / g) + '/' + (den / g));
+}
+
+function t113() {
+  let a = val('a113a'), b = val('a113b'), c = val('a113c'), d = val('a113d');
+  let op = document.getElementById('a113op').value, num, den;
+  if (op == '+') { num = a * d + c * b; den = b * d; }
+  else { num = a * d - c * b; den = b * d; }
+  let g = nod(num, den);
+  out('o113', (num / g) + '/' + (den / g));
+}
+
+function t114() {
+  let n = val('a114n'), m = val('a114m'), r = [];
+  for (let x = n; x <= m; x++) {
+    let s = '' + Math.abs(x), ok = true;
+    for (let ch of s) {
+      let d = +ch;
+      if (d == 0 || x % d != 0) { ok = false; break; }
+    }
+    if (ok) r.push(x);
+  }
+  out('o114', r.join(' '));
+}
+
+function t115() {
+  let n = val('a115n'), m = val('a115m'), r = [];
+  for (let x = n; x <= m; x++) {
+    let s = 0;
+    for (let ch of '' + Math.abs(x)) s += +ch;
+    if (s != 0 && x % s == 0) r.push(x);
+  }
+  out('o115', r.join(' '));
+}
+</script>
+</body>
+</html>
