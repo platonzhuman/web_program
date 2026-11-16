@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>visitka</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; display: flex; gap: 24px; }
+  .form { width: 340px; }
+  .form h2 { font-size: 18px; margin: 0 0 12px; }
+  label { display: block; font-size: 12px; margin-top: 8px; color: #555; }
+  input[type=text] { width: 100%; box-sizing: border-box; padding: 6px; margin-top: 2px; }
+  .row { margin-top: 4px; }
+  .row button { font-size: 11px; padding: 2px 6px; margin-right: 2px; }
+  .row button.on { background: #2f6fed; color: #fff; }
+  .colors span {
+    width: 16px; height: 16px; display: inline-block;
+    border: 1px solid #999; margin-right: 4px; cursor: pointer;
+  }
+  .colors span.on { outline: 2px solid #2f6fed; }
+  #apply {
+    margin-top: 14px; width: 100%; padding: 8px;
+    background: #2f6fed; color: #fff; border: 0; cursor: pointer;
+  }
+  .preview {
+    flex: 1; background: #e8e8e8; min-height: 420px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .card {
+    width: 420px; height: 240px; background: #fff;
+    position: relative; box-sizing: border-box; padding: 18px 22px;
+  }
+  .org { text-align: center; font-size: 12px; color: #666; }
+  .fio { text-align: center; font-weight: bold; margin-top: 28px; }
+  .job { text-align: center; font-style: italic; margin-top: 6px; }
+  .contacts {
+    position: absolute; right: 22px; bottom: 18px;
+    text-align: right; font-size: 12px; line-height: 1.5;
+  }
+  .add {
+    color: #2f6fed; background: none; border: 0;
+    cursor: pointer; padding: 0; margin-top: 4px; font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="form">
+  <h2>Конструктор визиток</h2>
+
+  <label>Наименование организации</label>
+  <input type="text" id="org" value='ООО "Ориентир"'>
+
+  <label>Фамилия, имя, отчество</label>
+  <input type="text" id="fio" value="Фёдоров Иван Семенович">
+  <div class="row" id="fioAlign">
+    <button type="button" data-v="left">L</button>
+    <button type="button" data-v="center" class="on">C</button>
+    <button type="button" data-v="right">R</button>
+    <button type="button" data-v="24" class="on">24px</button>
+    <button type="button" data-v="26">26px</button>
+    <button type="button" data-v="28">28px</button>
+  </div>
+  <div class="colors" id="fioColor">
+    <span data-c="#111" class="on" style="background:#111"></span>
+    <span data-c="#555" style="background:#555"></span>
+    <span data-c="#2f6fed" style="background:#2f6fed"></span>
+    <span data-c="#2e8b57" style="background:#2e8b57"></span>
+    <span data-c="#c9a227" style="background:#c9a227"></span>
+    <span data-c="#d36c9a" style="background:#d36c9a"></span>
+  </div>
+
+  <label>Должность</label>
+  <input type="text" id="job" value="Менеджер по развитию">
+  <div class="row" id="jobAlign">
+    <button type="button" data-v="left">L</button>
+    <button type="button" data-v="center" class="on">C</button>
+    <button type="button" data-v="right">R</button>
+    <button type="button" data-v="14" class="on">14px</button>
+    <button type="button" data-v="16">16px</button>
+    <button type="button" data-v="18">18px</button>
+  </div>
+  <div class="colors" id="jobColor">
+    <span data-c="#111" class="on" style="background:#111"></span>
+    <span data-c="#444" style="background:#444"></span>
+    <span data-c="#888" style="background:#888"></span>
+    <span data-c="#bbb" style="background:#bbb"></span>
+    <span data-c="#fff" style="background:#fff"></span>
+  </div>
+
+  <label>Телефон</label>
+  <div id="phones">
+    <input type="text" class="phone" value="8 (999) 123-45-67">
+  </div>
+  <button type="button" class="add" id="addPhone">+ Добавить еще один телефон</button>
+
+  <label>E-mail <input type="checkbox" id="showMail" checked> Отображать</label>
+  <input type="text" id="mail" value="fedorov.is@orientir.org">
+
+  <label>Адрес <input type="checkbox" id="showAddr" checked> Отображать</label>
+  <input type="text" id="addr" value="Иркутск, Байкальская, 421, оф. 12">
+
+  <button id="apply">Применить</button>
+</div>
+
+<div class="preview">
+  <div class="card">
+    <div class="org" id="oOrg"></div>
+    <div class="fio" id="oFio"></div>
+    <div class="job" id="oJob"></div>
+    <div class="contacts" id="oCont"></div>
+  </div>
+</div>
+
+<script>
+// настройки копятся тут, на карточку только по Применить
+let fioAlign = "center", fioSize = "24px", fioColor = "#111";
+let jobAlign = "center", jobSize = "14px", jobColor = "#111";
+
+function isAlign(v) {
+  return v === "left" || v === "center" || v === "right";
+}
+
+document.querySelectorAll("#fioAlign button").forEach(function (b) {
+  b.onclick = function () {
+    let v = b.dataset.v;
+    document.querySelectorAll("#fioAlign button").forEach(function (x) {
+      if (isAlign(v) === isAlign(x.dataset.v)) x.classList.remove("on");
+    });
+    b.classList.add("on");
+    if (isAlign(v)) fioAlign = v;
+    else fioSize = v + "px";
+  };
+});
+
+document.querySelectorAll("#jobAlign button").forEach(function (b) {
+  b.onclick = function () {
+    let v = b.dataset.v;
+    document.querySelectorAll("#jobAlign button").forEach(function (x) {
+      if (isAlign(v) === isAlign(x.dataset.v)) x.classList.remove("on");
+    });
+    b.classList.add("on");
+    if (isAlign(v)) jobAlign = v;
+    else jobSize = v + "px";
+  };
+});
+
+document.querySelectorAll("#fioColor span").forEach(function (s) {
+  s.onclick = function () {
+    document.querySelectorAll("#fioColor span").forEach(function (x) { x.classList.remove("on"); });
+    s.classList.add("on");
+    fioColor = s.dataset.c;
+  };
+});
+
+document.querySelectorAll("#jobColor span").forEach(function (s) {
+  s.onclick = function () {
+    document.querySelectorAll("#jobColor span").forEach(function (x) { x.classList.remove("on"); });
+    s.classList.add("on");
+    jobColor = s.dataset.c;
+  };
+});
+
+document.getElementById("addPhone").onclick = function () {
+  let box = document.getElementById("phones");
+  let inp = document.createElement("input");
+  inp.type = "text";
+  inp.className = "phone";
+  inp.style.marginTop = "4px";
+  inp.style.width = "100%";
+  inp.style.boxSizing = "border-box";
+  inp.style.padding = "6px";
+  box.appendChild(inp);
+};
+
+function apply() {
+  document.getElementById("oOrg").textContent = document.getElementById("org").value;
+
+  let fio = document.getElementById("oFio");
+  fio.textContent = document.getElementById("fio").value;
+  fio.style.textAlign = fioAlign;
+  fio.style.fontSize = fioSize;
+  fio.style.color = fioColor;
+
+  let job = document.getElementById("oJob");
+  job.textContent = document.getElementById("job").value;
+  job.style.textAlign = jobAlign;
+  job.style.fontSize = jobSize;
+  job.style.color = jobColor;
+
+  let lines = [];
+  document.querySelectorAll(".phone").forEach(function (p) {
+    if (p.value.trim()) lines.push(p.value.trim());
+  });
+  if (document.getElementById("showMail").checked) {
+    lines.push(document.getElementById("mail").value);
+  }
+  if (document.getElementById("showAddr").checked) {
+    lines.push(document.getElementById("addr").value);
+  }
+  let h = "";
+  for (let i = 0; i < lines.length; i++) h += "<div>" + lines[i] + "</div>";
+  document.getElementById("oCont").innerHTML = h;
+}
+
+document.getElementById("apply").onclick = apply;
+</script>
+</body>
+</html>

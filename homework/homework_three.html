@@ -1,0 +1,70 @@
+ <!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>homework_three</title>
+<style>
+  body { font-family: monospace; max-width: 700px; margin: 20px; }
+  .t { margin: 12px 0; padding-bottom: 8px; border-bottom: 1px solid #ccc; }
+  input { width: 70px; }
+  .r { color: green; }
+  table { border-collapse: collapse; margin-top: 6px; }
+  td, th { border: 1px solid #ccc; padding: 3px 7px; text-align: center; }
+  caption { font-weight: bold; margin-bottom: 4px; }
+  .today { background: #cfc; font-weight: bold; }
+</style>
+</head>
+<body>
+<h2>домашняя работа 3</h2>
+
+<div class="t">3.1 календарь на текущий месяц
+  <div id="o31"></div></div>
+
+<div class="t">3.2 таблица умножения от 1 до 10
+  <div id="o32"></div></div>
+
+<script>
+function outh(id, t) {
+  document.getElementById(id).innerHTML = t;
+}
+
+let months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь',
+              'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+let wdays = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
+
+function t31() {
+  let now = new Date();
+  let y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+  let first = (new Date(y, m, 1).getDay() + 6) % 7;
+  let cnt = new Date(y, m + 1, 0).getDate();
+  let h = '<table><caption>' + months[m] + ' ' + y + '</caption>';
+  h += '<tr>';
+  for (let i = 0; i < 7; i++) h += '<th>' + wdays[i] + '</th>';
+  h += '</tr><tr>';
+  for (let i = 0; i < first; i++) h += '<td></td>';
+  for (let i = 1; i <= cnt; i++) {
+    h += i == d ? '<td class="today">' + i + '</td>' : '<td>' + i + '</td>';
+    if ((first + i) % 7 == 0 && i < cnt) h += '</tr><tr>';
+  }
+  h += '</tr></table>';
+  outh('o31', h);
+}
+
+function t32() {
+  let h = '<table><tr><th></th>';
+  for (let j = 1; j <= 10; j++) h += '<th>' + j + '</th>';
+  h += '</tr>';
+  for (let i = 1; i <= 10; i++) {
+    h += '<tr><th>' + i + '</th>';
+    for (let j = 1; j <= 10; j++) h += '<td>' + (i * j) + '</td>';
+    h += '</tr>';
+  }
+  h += '</table>';
+  outh('o32', h);
+}
+
+t31();
+t32();
+</script>
+</body>
+</html>
